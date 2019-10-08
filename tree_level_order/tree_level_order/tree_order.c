@@ -2,9 +2,9 @@
 #include <stdio.h>
 #include<stdlib.h>
 #include<memory.h>
-
+typedef int element;
 typedef struct TreeNode {
-	int data;
+	element data;
 	struct TreeNode* left, * right;
 
 }TreeNode;

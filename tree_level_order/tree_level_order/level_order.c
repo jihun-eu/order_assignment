@@ -3,8 +3,9 @@
 #include<stdlib.h>
 #include<memory.h>
 #define MAX_SIZE 15
+typedef int element;
 typedef struct TreeNode {
-	int data;
+	element data;
 	struct TreeNode* left, * right;
 }TreeNode;
 typedef struct QueueType {
@@ -48,8 +49,6 @@ TreeNode* dequeue(QueueType* q) {
 }
 void level_order(TreeNode* ptr) {
 	QueueType q;
-	TreeNode* temp = ptr;
-	int tmp;
 	init(&q);
 	if (ptr->data == NULL)return;
 	enqueue(&q, ptr);
