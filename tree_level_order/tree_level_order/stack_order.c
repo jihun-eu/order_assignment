@@ -3,10 +3,17 @@
 #include<stdlib.h>
 #include<memory.h>
 #define MAX_SIZE 15
+#define False 1
+/*X
+		   1
+	   6       8
+   0        2     6
+2     1         6*/
 typedef int element;
 typedef struct TreeNode {
 	element data;
 	struct TreeNode* left, * right;
+	int check;
 }TreeNode;
 typedef struct StackType {
 	TreeNode* stack[MAX_SIZE];
@@ -43,26 +50,117 @@ TreeNode* pop(StackType* s) {
 	return s->stack[s->top--];
 }
 
-void level_order(TreeNode* ptr) {
+void Stack_preorder(TreeNode* ptr) {
 	StackType s;
 	init(&s);
 	if (ptr->data == NULL)return;
 	push(&s, ptr);
 	while (!is_empty(&s)) {
-		ptr = pop(&s);
-		
-		
+		ptr = pop(&s);				
 		if (ptr->right)
-			push(&s, ptr->right);
-		
+			push(&s, ptr->right);		
 		if (ptr->left)
 			push(&s, ptr->left);
 		printf("%d", ptr->data);
 	}
 }
 
+void Stack_inorder(TreeNode* ptr) {
+	StackType s;
+	
+	init(&s);
+	if (ptr->data == NULL)return;
+	while (ptr) {
+		push(&s, ptr);
+		ptr->check = False;
+		ptr=ptr->left;
+	}
+	while (!is_empty(&s)) {
+		ptr = pop(&s);
+		printf("%d", ptr->data);
+		
+		
+		if (ptr->left && ptr->left->check != False) {
+			push(&s, ptr->left);
+			ptr->left->check = False;
+		}
+		if (ptr->right && ptr->right->check != False) {
+			push(&s, ptr->right);
+			ptr->right->check = False;
+			if (ptr->right->left && ptr->right->left->check != False) {
+				push(&s, ptr->right->left);
+				ptr->right->left->check = False;
+			}
+		}
+		
+	}
+}
+void Stack_postorder(TreeNode* ptr) {
+	StackType s;
+	init(&s);
+	/*while (ptr) {
+		push(&s, ptr);
+		ptr->check = False;
+		if (ptr->right) {
+			push(&s, ptr->right);
+			ptr->right->check = False;
+			
+			if (ptr->right->right){
+				push(&s, ptr->right->right);
+				ptr->right->right->check = False;
+			}
+			if (ptr->right->left) {
+				push(&s, ptr->right->left);
+				ptr->right->left->check = False;
+			}
+		}
+		ptr = ptr->left;
+	}*/
+	while (ptr||!is_empty(&s)) {
+		push(&s, ptr);
+		ptr->check = False;
+		if (ptr->right && ptr->right->check != False)
+			ptr = ptr->right;
+		else if (ptr->left && ptr->left->check != False)
+			ptr = ptr->left;
+		else {
+			while (!ptr->left) {
+				ptr = pop(&s);
+				printf("%d", ptr->data);
+			}
+		}
+	}/*
+	while (!is_empty(&s)) {
+		ptr = pop(&s);
+		printf("%d", ptr->data);
+
+
+		if (ptr->left && ptr->left->check != False) {
+			push(&s, ptr->left);
+			ptr->left->check = False;
+		}
+		if (ptr->right && ptr->right->check != False) {
+			push(&s, ptr->right);
+			ptr->right->check = False;
+			if (ptr->right->left && ptr->right->left->check != False) {
+				push(&s, ptr->right->left);
+				ptr->right->left->check = False;
+			}
+		}
+
+	}	*/
+}
 int main() {
-	level_order(root);
+	
+	printf("preorder: ");
+	Stack_preorder(root);
+	printf("\n");
+	printf("inorder: ");
+	Stack_inorder(root);
+	printf("\n");
+	printf("postorder: ");
+	Stack_postorder(root);
+	printf("\n");
 	getchar();
 	return 0;
 	

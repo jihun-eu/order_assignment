@@ -45,9 +45,9 @@ void postorder(TreeNode* root) {
 	}
 }
 int main() {
-	inorder(root);
-	printf("\n");
 	preorder(root);
+	printf("\n");
+	inorder(root);
 	printf("\n");
 	postorder(root);
 	printf("\n");
