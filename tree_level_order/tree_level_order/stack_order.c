@@ -67,6 +67,8 @@ void Stack_preorder(TreeNode* ptr) {
 
 void Stack_inorder(TreeNode* ptr) {
 	StackType s;
+	StackType s_temp;
+	TreeNode* temp = ptr;
 	
 	init(&s);
 	if (ptr->data == NULL)return;
@@ -96,9 +98,9 @@ void Stack_inorder(TreeNode* ptr) {
 	}
 }
 void Stack_postorder(TreeNode* ptr) {
-	StackType s;
+	/*StackType s;
 	init(&s);
-	/*while (ptr) {
+	while (ptr) {
 		push(&s, ptr);
 		ptr->check = False;
 		if (ptr->right) {
@@ -115,8 +117,8 @@ void Stack_postorder(TreeNode* ptr) {
 			}
 		}
 		ptr = ptr->left;
-	}*/
-	while (ptr||!is_empty(&s)) {
+	}*///1차구현(스택에 들어가지지 않음)
+	/*while (ptr||!is_empty(&s)) {
 		push(&s, ptr);
 		ptr->check = False;
 		if (ptr->right && ptr->right->check != False)
@@ -129,7 +131,8 @@ void Stack_postorder(TreeNode* ptr) {
 				printf("%d", ptr->data);
 			}
 		}
-	}/*
+	}*///2차구현(스택에 들어가지지 않음)
+	/*
 	while (!is_empty(&s)) {
 		ptr = pop(&s);
 		printf("%d", ptr->data);
@@ -148,7 +151,67 @@ void Stack_postorder(TreeNode* ptr) {
 			}
 		}
 
-	}	*/
+	}	*///3차구현(스택에 들어가지지 않음)
+	/*while (ptr) {
+		if (ptr->check != False) {
+			push(&s, ptr);
+			ptr->check = False;
+		}
+		if (ptr->left) {
+			ptr = ptr->left;
+			push(&s, ptr);
+			ptr->check = False;
+		}
+		if (ptr->right) {
+			ptr = ptr->right;
+			push(&s, ptr);
+			ptr->check = False;
+		}
+		
+	}
+	while (!is_empty(&s)) {
+		ptr = pop(&s);
+		printf("%d", ptr->data);
+		if (ptr->right && ptr->right->check != False) {
+			push(&s, ptr);
+			ptr = ptr->right;
+			push(&s, ptr);
+			ptr->right->check = False;
+
+		}
+		else if (ptr->left && ptr->left->check != False) {
+			ptr = ptr->left;
+			push(&s, ptr);
+		}
+	}*///4차구현(무한반복)
+	StackType stack;
+	StackType temp;
+
+	StackType* pstack = &temp;
+
+	TreeNode* node = root;
+
+	int i;
+
+	init(&stack);
+	init(&temp);
+	for (;;) {
+		if (node == NULL && is_empty(&stack))
+			break;
+		if (node != NULL) {
+			push(&stack, node); push(&temp, node);
+			node = node->right;
+		}
+		else {
+			node = pop(&stack);
+			node = node->left;
+		}
+	}
+
+	for (i = pstack->top; i >= 0; i--) {
+		printf("%d", pstack->stack[i]->data);
+	}
+
 }
 int main() {
 	
